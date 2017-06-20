@@ -16,7 +16,7 @@ public class Model implements Serializable {
     @Enumerated
     private EnumModel name;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<Double> params;
 
     public Model() {

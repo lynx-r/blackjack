@@ -1,18 +1,18 @@
 package com.workingbit.controller;
 
 import com.workingbit.entity.EnumModel;
+import com.workingbit.entity.EnumRiskDegree;
 import com.workingbit.entity.Model;
 import com.workingbit.service.ModelService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MainController {
@@ -24,9 +24,11 @@ public class MainController {
     // Инъекции JavaFX
     @FXML
     private Button btnChesser;
+    @FXML
+    private Label lblResults;
 
     // Переменные
-    private String chesserDefaultValue;
+    private int CHESSER_PARAMS_LENGTH = 6;
 
     /**
      * Инициализация контроллера от JavaFX.
@@ -61,6 +63,7 @@ public class MainController {
      * Х4 = 0,52
      * Х5 = 0,93
      * Х6 = 0,20
+     *
      * @param event
      */
     @FXML
@@ -73,12 +76,12 @@ public class MainController {
     }
 
     /**
+     * Х1 = 0,02
+     * Х2 = 1,08
+     * Х3 = 0,70
+     * Х4 = 2,08
+     * Х5 = 3,24
      *
-     Х1 = 0,02
-     Х2 = 1,08
-     Х3 = 0,70
-     Х4 = 2,08
-     Х5 = 3,24
      * @param event
      */
     @FXML
@@ -91,10 +94,10 @@ public class MainController {
     }
 
     /**
+     * Х1 = -0,006
+     * Х2 = 0,03
+     * Х3 = 4,92
      *
-     Х1 = -0,006
-     Х2 = 0,03
-     Х3 = 4,92
      * @param event
      */
     @FXML
@@ -104,6 +107,72 @@ public class MainController {
                 "Параметры (наример: Х1,Х2,Х3):",
                 "-0.006,0.03,4.92"
         );
+    }
+
+    @FXML
+    public void handleCalcAction(ActionEvent event) {
+        List<Double> chesserParams = modelService.findByName(EnumModel.CHESSER).getParams();
+        double zChesser = -2.04
+                - 5.24 * getOrOne(chesserParams, 0)
+                + 0.0053 * getOrOne(chesserParams, 1)
+                - 6.65 * getOrOne(chesserParams, 2)
+                + 4.40 * getOrOne(chesserParams, 3)
+                - 0.08 * getOrOne(chesserParams, 4)
+                - 0.1 * getOrOne(chesserParams, 5);
+        double pChesser = possibility(zChesser);
+        List<Double> gdanovParams = modelService.findByName(EnumModel.GDANOV).getParams();
+
+        double zGdanov = 4.32
+                - 1.25 * getOrOne(gdanovParams, 0)
+                - 0.12 * getOrOne(gdanovParams, 1)
+                - 0.07 * getOrOne(gdanovParams, 2)
+                - 0.34 * getOrOne(gdanovParams, 3)
+                - 2.17 * getOrOne(gdanovParams, 4);
+        double pGdanov = possibility(zGdanov);
+
+        List<Double> juParams = modelService.findByName(EnumModel.JU).getParams();
+        double zJu = 0.11 * getOrOne(juParams, 0)
+                - 0.007 * getOrOne(juParams, 1)
+                - 0.11 * getOrOne(juParams, 2);
+        double pJu = possibility(zJu);
+
+        HashMap<EnumRiskDegree, Set<EnumModel>> enumRiskDegreeBooleanHashMap = new HashMap<>();
+        putRiskDegreeforModel(enumRiskDegreeBooleanHashMap, EnumModel.CHESSER, pChesser);
+        putRiskDegreeforModel(enumRiskDegreeBooleanHashMap, EnumModel.GDANOV, pGdanov);
+        putRiskDegreeforModel(enumRiskDegreeBooleanHashMap, EnumModel.JU, pJu);
+
+        enumRiskDegreeBooleanHashMap.entrySet()
+                .stream()
+                .forEach(enumRiskDegreeSetEntry -> {
+                    lblResults.setText(lblResults.getText()
+                            + "\n" + enumRiskDegreeSetEntry.getKey().getDisplayName()
+                            + "\n" + enumRiskDegreeSetEntry.getValue().toString());
+                });
+    }
+
+    private void putRiskDegreeforModel(HashMap<EnumRiskDegree, Set<EnumModel>> enumRiskDegreeBooleanHashMap,
+                                       EnumModel model,
+                                       double possibility) {
+        Optional<EnumRiskDegree> first = Arrays.stream(EnumRiskDegree.values())
+                .filter(enumRiskDegree -> enumRiskDegree.inInterval(possibility))
+                .findFirst();
+        if (first.isPresent()) {
+            EnumRiskDegree risk = first.get();
+            if (!enumRiskDegreeBooleanHashMap.containsKey(risk)) {
+                enumRiskDegreeBooleanHashMap.put(risk, new HashSet<>());
+            }
+            enumRiskDegreeBooleanHashMap.get(risk).add(model);
+            return;
+        }
+        throw new RuntimeException("Риск не определен");
+    }
+
+    private double possibility(double z) {
+        return 1 / (1 + Math.exp(z));
+    }
+
+    private double getOrOne(List<Double> params, int num) {
+        return params.get(num) == null ? 1 : params.get(num);
     }
 
     private void showArgsInputDialog(EnumModel modelName, String contentText, String defaultValue) {
