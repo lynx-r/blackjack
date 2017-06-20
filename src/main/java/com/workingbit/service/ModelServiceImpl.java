@@ -46,8 +46,8 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public String getDefaultParamsStringForModel(EnumModel model) {
-        Model byName = repository.findByName(EnumModel.CHESSER);
+    public String getDefaultParamsStringForModel(EnumModel enumModel) {
+        Model byName = repository.findByName(enumModel);
         return byName.getParams().stream()
                 .map(Object::toString)
                 .reduce((aDouble, aDouble2) -> aDouble + "," + aDouble2)

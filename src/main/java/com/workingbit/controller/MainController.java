@@ -26,7 +26,7 @@ public class MainController {
     private Button btnChesser;
 
     // Переменные
-    private String chesserDefaultValue = "0.04,42.13,0.40,0.52,0.93,0.20";
+    private String chesserDefaultValue;
 
     /**
      * Инициализация контроллера от JavaFX.
@@ -51,11 +51,6 @@ public class MainController {
      */
     @PostConstruct
     public void init() {
-        String defaultParamsStringForModel = modelService.getDefaultParamsStringForModel(EnumModel.CHESSER);
-        if (defaultParamsStringForModel == null) {
-            defaultParamsStringForModel = chesserDefaultValue;
-        }
-        chesserDefaultValue = defaultParamsStringForModel;
     }
 
     /**
@@ -66,7 +61,6 @@ public class MainController {
      * Х4 = 0,52
      * Х5 = 0,93
      * Х6 = 0,20
-     *
      * @param event
      */
     @FXML
@@ -74,7 +68,41 @@ public class MainController {
         showArgsInputDialog(
                 EnumModel.CHESSER,
                 "Параметры (наример: Х1,Х2,Х3,Х4,Х5,Х6):",
-                chesserDefaultValue
+                "0.04,42.13,0.40,0.52,0.93,0.20"
+        );
+    }
+
+    /**
+     *
+     Х1 = 0,02
+     Х2 = 1,08
+     Х3 = 0,70
+     Х4 = 2,08
+     Х5 = 3,24
+     * @param event
+     */
+    @FXML
+    public void handleGdanovAction(ActionEvent event) {
+        showArgsInputDialog(
+                EnumModel.GDANOV,
+                "Параметры (наример: Х1,Х2,Х3,Х4,Х5):",
+                "0.02,1.08,0.70,2.08,3.24"
+        );
+    }
+
+    /**
+     *
+     Х1 = -0,006
+     Х2 = 0,03
+     Х3 = 4,92
+     * @param event
+     */
+    @FXML
+    public void handleJuAction(ActionEvent event) {
+        showArgsInputDialog(
+                EnumModel.JU,
+                "Параметры (наример: Х1,Х2,Х3):",
+                "-0.006,0.03,4.92"
         );
     }
 
@@ -85,7 +113,7 @@ public class MainController {
             defaultParamsStringForModel = defaultValue;
         }
         TextInputDialog dialog = new TextInputDialog(defaultParamsStringForModel);
-        dialog.setTitle("Параметры");
+        dialog.setTitle(modelName.getDisplayName());
         dialog.setHeaderText("Введите параметры");
         dialog.setContentText(contentText);
 
