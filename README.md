@@ -1,3 +1,3 @@
-# blackjack
+# Economy
 
-Student's project. Cost is $19.
+Student's project
