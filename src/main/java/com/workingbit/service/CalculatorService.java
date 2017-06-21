@@ -15,7 +15,7 @@ public class CalculatorService {
         ScriptEngineManager mgr = new ScriptEngineManager();
         ScriptEngine engine = mgr.getEngineByName("JavaScript");
         try {
-            return (Double) engine.eval(expression);
+            return Double.valueOf(String.valueOf(engine.eval(expression)));
         } catch (ScriptException e) {
             e.printStackTrace();
             return null;
