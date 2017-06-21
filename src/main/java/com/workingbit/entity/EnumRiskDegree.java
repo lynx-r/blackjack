@@ -7,7 +7,7 @@ public enum EnumRiskDegree {
     VERY_HIGH("Очень высокий", 0.8, 1),
     HIGH("Высокий", 0.6, 0.8),
     MEDIUM("Средний", 0.4, 0.6),
-    LOW("Низкая", 0.2, 0.4),
+    LOW("Низкий", 0.2, 0.4),
     VERY_LOW("Очень низкий", 0, 0.2);
 
     private String displayName;
