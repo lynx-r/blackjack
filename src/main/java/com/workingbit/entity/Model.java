@@ -13,17 +13,15 @@ public class Model implements Serializable {
     private Long id;
 
     @Column
-    @Enumerated
-    private EnumModel name;
+    private String name;
+
+    @Column
+    private String formula;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<Double> params;
 
     public Model() {
-    }
-
-    public Model(EnumModel name) {
-        this.name = name;
     }
 
     public Long getId() {
@@ -34,12 +32,20 @@ public class Model implements Serializable {
         this.id = id;
     }
 
-    public EnumModel getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(EnumModel name) {
+    public void setName(String name) {
         this.name = name;
+    }
+
+    public String getFormula() {
+        return formula;
+    }
+
+    public void setFormula(String formula) {
+        this.formula = formula;
     }
 
     public List<Double> getParams() {

@@ -1,6 +1,5 @@
 package com.workingbit.repository;
 
-import com.workingbit.entity.EnumModel;
 import com.workingbit.entity.Model;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Propagation;
@@ -13,6 +12,6 @@ public interface ModelRepository extends CrudRepository<Model, Long> {
 
     List<Model> findAll();
 
-    Model findByName(EnumModel name);
+    Model findByName(String name);
 
 }

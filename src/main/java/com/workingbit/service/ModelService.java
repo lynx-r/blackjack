@@ -1,6 +1,5 @@
 package com.workingbit.service;
 
-import com.workingbit.entity.EnumModel;
 import com.workingbit.entity.Model;
 
 import java.util.List;
@@ -11,7 +10,7 @@ public interface ModelService {
 
     List<Model> findAll();
 
-    Model findByName(EnumModel name);
+    Model findByName(String name);
 
-    String getDefaultParamsStringForModel(EnumModel model);
+    String getDefaultParamsStringForModel(List<Double> model);
 }

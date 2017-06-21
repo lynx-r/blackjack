@@ -1,6 +1,5 @@
 package com.workingbit.service;
 
-import com.workingbit.entity.EnumModel;
 import com.workingbit.entity.Model;
 import com.workingbit.repository.ModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ public class ModelServiceImpl implements ModelService {
      */
     @PostConstruct
     public void generateTestData() {
-        save(new Model(EnumModel.CHESSER));
-        save(new Model(EnumModel.GDANOV));
-        save(new Model(EnumModel.JU));
     }
 
     @Override
@@ -41,14 +37,13 @@ public class ModelServiceImpl implements ModelService {
     }
 
     @Override
-    public Model findByName(EnumModel name) {
+    public Model findByName(String name) {
         return repository.findByName(name);
     }
 
     @Override
-    public String getDefaultParamsStringForModel(EnumModel enumModel) {
-        Model byName = repository.findByName(enumModel);
-        return byName.getParams().stream()
+    public String getDefaultParamsStringForModel(List<Double> params) {
+        return params.stream()
                 .map(Object::toString)
                 .reduce((aDouble, aDouble2) -> aDouble + "," + aDouble2)
                 .orElse(null);
