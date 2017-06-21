@@ -23,7 +23,6 @@ INSERT INTO model (id, default_value, display_name, formula, label_text, name, t
 VALUES (3, '-0.006,0.03,4.92', 'Модель Джу-Ха Техонга',
         '0.11 * %f - 0.007 * %f - 0.11 * %f',
         'Параметры (наример: Х1,Х2,Х3):', 'JU', 0.2);
-INSERT INTO model_params (model_id, params) VALUES (1, 0.04);
-INSERT INTO model_params (model_id, params) VALUES (1, -0.006);
-INSERT INTO model_params (model_id, params) VALUES (1,0.03);
-INSERT INTO model_params (model_id, params) VALUES (1,4.92);
+INSERT INTO model_params (model_id, params) VALUES (3, -0.006);
+INSERT INTO model_params (model_id, params) VALUES (3, 0.03);
+INSERT INTO model_params (model_id, params) VALUES (3, 4.92);
