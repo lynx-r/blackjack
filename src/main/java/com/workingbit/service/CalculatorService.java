@@ -11,6 +11,8 @@ import javax.script.ScriptException;
  */
 @Service
 public class CalculatorService {
+
+    // TODO прикрути сюда какую-нибудь виндовую либу для парсинга
     public Double calculate(String expression) {
         ScriptEngineManager mgr = new ScriptEngineManager();
         ScriptEngine engine = mgr.getEngineByName("JavaScript");
